@@ -14,12 +14,20 @@ let nextId = 3;
 const App = () => {
   const [tasks, setTasks] = useState(initialTasks);
 
+  const duplicatedTask = (text) => {
+    return tasks.some((task) => task.text === text);
+  };
+
   const createTaskHandler = (taskText) => {
-    if (taskText) {
+    if (taskText && !duplicatedTask(taskText)) {
       setTasks([...tasks, { id: nextId++, text: taskText, done: false }]);
     } else {
-      alert('Task text cannot be empty!');
+      alert('Task text cannot be empty or duplicated!');
     }
+  };
+
+  const deleteTask = (taskId) => {
+    setTasks(tasks.filter((task) => task.id !== taskId));
   };
 
   const checkTaskHandler = (taskId) => {
@@ -38,7 +46,11 @@ const App = () => {
     <div className="App">
       <h1>A day in the life</h1>
       <TaskCreator createTaskHandler={createTaskHandler} />
-      <TasksList tasks={tasks} checkTaskHandler={checkTaskHandler} />
+      <TasksList
+        tasks={tasks}
+        checkTaskHandler={checkTaskHandler}
+        deleteTask={deleteTask}
+      />
     </div>
   );
 };

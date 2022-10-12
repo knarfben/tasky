@@ -8,11 +8,16 @@ const TaskCreator = ({ createTaskHandler }) => {
 
   const onClickHandler = () => {
     createTaskHandler(newTask);
+    setNewTask('');
   };
 
   return (
     <div>
-      <input onChange={onChangeHandler} value={newTask} />{' '}
+      <input
+        placeholder="enter new task"
+        onChange={onChangeHandler}
+        value={newTask}
+      />{' '}
       <button onClick={onClickHandler} type="button">
         new todo
       </button>

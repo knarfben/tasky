@@ -1,4 +1,4 @@
-const TasksList = ({ tasks, checkTaskHandler }) => {
+const TasksList = ({ tasks, checkTaskHandler, deleteTask }) => {
   const clickHandler = (taskId) => {
     checkTaskHandler(taskId);
   };
@@ -13,6 +13,9 @@ const TasksList = ({ tasks, checkTaskHandler }) => {
             checked={task.done}
           />
           <label htmlFor={`cb${task.id}`}>{task.text}</label>
+          <button type="button" onClick={() => deleteTask(task.id)}>
+            &#10005;
+          </button>
         </li>
       ))}
     </ul>
