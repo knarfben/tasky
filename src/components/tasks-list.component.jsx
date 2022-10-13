@@ -56,9 +56,11 @@ const TasksList = ({ tasks, checkTaskHandler, deleteTask, saveTask }) => {
               ) : (
                 <>
                   <label htmlFor={`cb${task.id}`}>{task.text}</label>
-                  <button type="button" onClick={() => editTask(task.id)}>
-                    edit
-                  </button>
+                  {!task.done && (
+                    <button type="button" onClick={() => editTask(task.id)}>
+                      edit
+                    </button>
+                  )}
                 </>
               )}
               <button type="button" onClick={() => deleteTaskHandler(task.id)}>
