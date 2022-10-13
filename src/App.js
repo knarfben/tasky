@@ -6,7 +6,7 @@ import TasksList from './components/tasks-list.component';
 const initialTasks = [
   { id: 0, text: 'Go to hell!', done: false },
   { id: 1, text: 'Go to heaven!', done: true },
-  { id: 2, text: 'Go to the purgatory zone!', done: false },
+  { id: 2, text: 'Go to the purgatory!', done: false },
 ];
 
 let nextId = 3;
@@ -30,6 +30,17 @@ const App = () => {
     setTasks(tasks.filter((task) => task.id !== taskId));
   };
 
+  const saveTask = (taskText, taskId) => {
+    setTasks(
+      tasks.map((task) => {
+        if (task.id === taskId) {
+          return { ...task, text: taskText };
+        }
+        return task;
+      })
+    );
+  };
+
   const checkTaskHandler = (taskId) => {
     setTasks(
       tasks.map((task) => {
@@ -50,6 +61,7 @@ const App = () => {
         tasks={tasks}
         checkTaskHandler={checkTaskHandler}
         deleteTask={deleteTask}
+        saveTask={saveTask}
       />
     </div>
   );
