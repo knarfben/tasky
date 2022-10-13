@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
-const TasksList = ({ tasks, checkTaskHandler, deleteTask, saveTask }) => {
+const TasksList = ({ tasks, onChangeTask, onDeleteTask }) => {
   const [editingTaskId, setEditingTaskId] = useState(-1);
   const [editingTaskText, setEditingTaskText] = useState('');
 
-  const clickHandler = (taskId) => {
-    checkTaskHandler(taskId);
+  const checkBoxHandler = (taskId) => {
+    const changedTask = tasks.find((task) => task.id === taskId);
+    onChangeTask({ ...changedTask, done: !changedTask.done });
   };
 
   const editTask = (taskId) => {
@@ -17,8 +18,9 @@ const TasksList = ({ tasks, checkTaskHandler, deleteTask, saveTask }) => {
     }
   };
 
-  const saveTaskHandler = (saveTaskId) => {
-    saveTask(editingTaskText, saveTaskId);
+  const changeTextHandler = (saveTaskId) => {
+    const changedTask = tasks.find((task) => task.id === saveTaskId);
+    onChangeTask({ ...changedTask, text: editingTaskText });
     setEditingTaskId(-1);
   };
 
@@ -27,7 +29,7 @@ const TasksList = ({ tasks, checkTaskHandler, deleteTask, saveTask }) => {
   };
 
   const deleteTaskHandler = (taskId) => {
-    deleteTask(taskId);
+    onDeleteTask(taskId);
     setEditingTaskId(-1);
   };
   return (
@@ -37,7 +39,7 @@ const TasksList = ({ tasks, checkTaskHandler, deleteTask, saveTask }) => {
           {tasks.map((task) => (
             <li key={task.id}>
               <input
-                onChange={() => clickHandler(task.id)}
+                onChange={() => checkBoxHandler(task.id)}
                 id={`cb${task.id}`}
                 type="checkbox"
                 checked={task.done}
@@ -47,7 +49,7 @@ const TasksList = ({ tasks, checkTaskHandler, deleteTask, saveTask }) => {
                   <input value={editingTaskText} onChange={onChangeHandler} />
                   <button
                     type="button"
-                    onClick={() => saveTaskHandler(task.id)}
+                    onClick={() => changeTextHandler(task.id)}
                   >
                     save
                   </button>

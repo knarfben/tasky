@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import './App.css';
 import TaskCreator from './components/task-creator.component';
 import TasksList from './components/tasks-list.component';
@@ -11,57 +11,62 @@ const initialTasks = [
 
 let nextId = 3;
 
+const tasksReducer = (tasks, action) => {
+  switch (action.type) {
+    case 'add':
+      return [...tasks, { id: nextId++, text: action.text, done: false }];
+    case 'change':
+      return tasks.map((task) => {
+        if (task.id === action.task.id) {
+          return action.task;
+        } else {
+          return task;
+        }
+      });
+    case 'delete':
+      return tasks.filter((task) => task.id !== action.taskId);
+    default:
+      throw new Error('wrong action type');
+  }
+};
+
 const App = () => {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
 
   const duplicatedTask = (text) => {
     return tasks.some((task) => task.text === text);
   };
 
-  const createTaskHandler = (taskText) => {
+  const handleAddTask = (taskText) => {
     if (taskText && !duplicatedTask(taskText)) {
-      setTasks([...tasks, { id: nextId++, text: taskText, done: false }]);
+      dispatch({
+        type: 'add',
+        text: taskText,
+      });
     } else {
       alert('Task text cannot be empty or duplicated!');
     }
   };
 
-  const deleteTask = (taskId) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
+  const handleDeleteTask = (taskId) => {
+    dispatch({
+      type: 'delete',
+      taskId: taskId,
+    });
   };
 
-  const saveTask = (taskText, taskId) => {
-    setTasks(
-      tasks.map((task) => {
-        if (task.id === taskId) {
-          return { ...task, text: taskText };
-        }
-        return task;
-      })
-    );
-  };
-
-  const checkTaskHandler = (taskId) => {
-    setTasks(
-      tasks.map((task) => {
-        if (task.id === taskId) {
-          return { ...task, done: !task.done };
-        } else {
-          return task;
-        }
-      })
-    );
+  const handleChangeTask = (task) => {
+    dispatch({ type: 'change', task: task });
   };
 
   return (
     <div className="App">
       <h1>A day in the life</h1>
-      <TaskCreator createTaskHandler={createTaskHandler} />
+      <TaskCreator createTaskHandler={handleAddTask} />
       <TasksList
         tasks={tasks}
-        checkTaskHandler={checkTaskHandler}
-        deleteTask={deleteTask}
-        saveTask={saveTask}
+        onDeleteTask={handleDeleteTask}
+        onChangeTask={handleChangeTask}
       />
     </div>
   );
