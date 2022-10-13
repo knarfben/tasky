@@ -9,7 +9,6 @@ const TasksList = ({ tasks, checkTaskHandler, deleteTask, saveTask }) => {
   };
 
   const editTask = (taskId) => {
-    console.log({ editingTaskId });
     if (editingTaskId >= 0) {
       alert('You cannot edit more than one task at the time!');
     } else {
